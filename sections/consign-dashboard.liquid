@@ -1091,6 +1091,11 @@
       },
       placeholder: 'Search or select a brand...',
       maxOptions: 200,
+      render: {
+        no_results: function (data, escape) {
+          return '<div class="no-results" onclick="window.selectBrandNotListed(event)" style="padding:10px 15px; cursor:pointer; color:#666;">Brand not found? <span style="text-decoration:underline; color:#000;">Select "Brand Not Listed"</span></div>';
+        },
+      },
       onChange: function (value) {
         checkBrandOther(value);
       },
@@ -1106,6 +1111,16 @@
       checkBrandOther('Brand Not Listed');
     }
   }
+
+  // Global helper for no_results click
+  window.selectBrandNotListed = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (tomSelectInstance) {
+      tomSelectInstance.setValue('Brand Not Listed');
+      tomSelectInstance.close();
+    }
+  };
 
   function checkBrandOther(value) {
     const otherInput = document.getElementById('brand-other-input');
