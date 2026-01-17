@@ -1,0 +1,87 @@
+{% comment %} SO. by SORA Whatsapp Button on product Page — Snippet {% endcomment %}
+{%- assign _product = product | default: nil -%}
+{%- if _product == nil and request.page_type == 'product' and all_products -%}
+  {%- assign _product = product -%}
+{%- endif -%}
+
+{%- assign global_whatsapp_enabled = settings.sbs_whatsapp_enabled | default: true -%}
+{%- assign hide_tag = 'whatsapp-hide' -%}
+{%- assign product_has_hide_tag = false -%}
+{%- if _product and _product.tags and _product.tags contains hide_tag -%}
+  {%- assign product_has_hide_tag = true -%}
+{%- endif -%}
+
+{%- if _product and global_whatsapp_enabled and product_has_hide_tag == false -%}
+  {%- assign phone_e164 = settings.sbs_whatsapp_phone | default: '966555043176' -%}
+  {%- assign variant = _product.selected_or_first_available_variant -%}
+
+  {%- capture wa_message -%}
+Hello, I'm interested in:
+{{ _product.title }}{% if variant.title and variant.title != 'Default Title' %} – {{ variant.title }}{% endif %}
+SKU: {% if variant.sku != blank %}{{ variant.sku }}{% else %}{{ _product.handle | upcase }}{% endif %}
+Link: {{ shop.url }}{{ _product.url }}
+  {%- endcapture -%}
+
+  {%- assign wa_text = wa_message | strip | url_encode -%}
+  {%- assign wa_url = 'https://api.whatsapp.com/send?phone=' | append: phone_e164 | append: '&text=' | append: wa_text -%}
+
+  {%- comment -%} Style variables from Theme settings {%- endcomment -%}
+  {%- assign _btn_bg = settings.sbs_wa_btn_bg | default: '#009d00' -%}
+  {%- assign _btn_text = settings.sbs_wa_btn_text | default: '#ffffff' -%}
+  {%- assign _icon_color = settings.sbs_wa_icon_color | default: _btn_text -%}
+  {%- assign _btn_px = settings.sbs_wa_btn_px | default: 30 -%}
+  {%- assign _btn_py = settings.sbs_wa_btn_py | default: 11 -%}
+  {%- assign _btn_gap = settings.sbs_wa_btn_gap | default: 10 -%}
+  {%- assign _btn_radius = settings.sbs_wa_btn_radius | default: 6 -%}
+  {%- assign _btn_font = settings.sbs_wa_btn_font | default: 14 -%}
+  {%- assign _btn_transform = settings.sbs_wa_btn_uppercase -%}
+
+  {%- assign _box_bg = settings.sbs_wa_box_bg | default: '#ffffff' -%}
+  {%- assign _box_pt = settings.sbs_wa_box_pt | default: 5 -%}
+  {%- assign _box_pb = settings.sbs_wa_box_pb | default: 5 -%}
+  {%- assign _box_border_style = settings.sbs_wa_box_border_style | default: 'ridge' -%}
+  {%- assign _box_border_w = settings.sbs_wa_box_border_width | default: 2 -%}
+  {%- assign _box_border_c = settings.sbs_wa_box_border_color | default: '#00000014' -%}
+  {%- assign _note_size = settings.sbs_wa_note_size | default: 12 -%}
+
+  <div class="sbs-whatsapp-cta-wrapper"
+       style="
+         background-color: {{ _box_bg }};
+         padding-top: {{ _box_pt }}px;
+         padding-bottom: {{ _box_pb }}px;
+         border-style: {{ _box_border_style }};
+         border-width: {{ _box_border_w }}px;
+         border-color: {{ _box_border_c }};
+       ">
+    <div class="sbs-whatsapp-cta" style="text-align:center; margin:12px 0;">
+    <p class="sbs-whatsapp-note"
+   style="font-size: {{ _note_size }}px; color:#000; margin:0 0 {{ settings.sbs_wa_gap_note_button | default: 12 }}px; line-height:1.4;">
+        {{ settings.sbs_whatsapp_note | default: 'For product inquiries or further information, our Personal Shopping Manager is here for you.' }}
+      </p>
+
+      <a href="{{ wa_url }}"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="sbs-whatsapp-btn"
+         style="
+           display:inline-flex; align-items:center; gap: {{ _btn_gap }}px;
+           background-color: {{ _btn_bg }};
+           color: {{ _btn_text }};
+           font-size: {{ _btn_font }}px;
+           text-transform: {% if _btn_transform %}uppercase{% else %}none{% endif %};
+           padding: {{ _btn_py }}px {{ _btn_px }}px;
+           border-radius: {{ _btn_radius }}px;
+           text-decoration:none; border:none; box-shadow:none; cursor:pointer;
+         "
+         aria-label="{{ 'sbs.whatsapp_cta_aria' | t: product: _product.title }}">
+        <span class="sbs-wa-icon" aria-hidden="true" style="display:block; color: {{ _icon_color }};">
+          <svg width="20" height="20" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" focusable="false">
+            <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M255.936 0H256.064C397.216 0 512 114.848 512 256C512 397.152 397.216 512 256.064 512C204 512 155.712 496.512 115.232 469.696L16.832 501.152L48.7358 406.048C18.0479 363.904 0 312 0 256C0 114.816 114.784 0 255.936 0ZM354.784 397.632C374.336 393.408 398.848 378.944 405.024 361.504C411.2 344.032 411.2 329.152 409.408 325.984C407.961 323.47 404.539 321.823 399.431 319.364C398.102 318.723 396.657 318.028 395.104 317.248C387.584 313.504 351.008 295.424 344.096 293.024C337.312 290.464 330.848 291.36 325.728 298.592C324.753 299.957 323.78 301.324 322.813 302.685C316.638 311.371 310.681 319.748 305.728 325.088C301.216 329.888 293.856 330.496 287.68 327.936C275.592 323.045 253.902 314.285 227.648 290.912C205.504 271.2 190.464 246.656 186.112 239.296C181.839 231.913 185.525 227.583 188.931 223.582L189.12 223.36C191.316 220.643 193.447 218.38 195.589 216.106C197.13 214.47 198.676 212.829 200.256 211.008L200.939 210.222C204.295 206.363 206.293 204.067 208.544 199.264C211.104 194.304 209.28 189.184 207.456 185.408C206.201 182.762 198.441 163.937 191.784 147.785C188.94 140.884 186.297 134.47 184.448 130.016C179.488 118.144 175.712 117.696 168.192 117.376L167.485 117.34C165.11 117.22 162.496 117.088 159.616 117.088C149.824 117.088 139.616 119.968 133.44 126.272L132.766 126.958C124.865 134.994 107.264 152.894 107.264 188.576C107.264 224.329 132.633 258.929 137.325 265.328L137.664 265.792C137.946 266.163 138.479 266.934 139.253 268.055C148.836 281.933 195.514 349.531 265.12 378.368C323.936 402.752 341.408 400.48 354.784 397.632Z"/>
+          </svg>
+        </span>
+        {{ settings.sbs_whatsapp_label | default: 'CONTACT NOW' }}
+      </a>
+    </div>
+  </div>
+{%- endif -%}
+{% comment %} END snippet {% endcomment %}
