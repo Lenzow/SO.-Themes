@@ -169,9 +169,15 @@ async function handleSubmitConsign(request, env) {
 
       const fileRes = await shopifyGraphql(fileCreateQuery, { files: fileInputs }, env);
 
-      if (fileRes.data.fileCreate.userErrors.length > 0) {
-        console.error("File Create Errors:", fileRes.data.fileCreate.userErrors);
-        // Continue anyway to at least save the data
+      // Check if response has data
+      if (!fileRes.data || !fileRes.data.fileCreate) {
+        throw new Error("File creation failed: Invalid response from Shopify");
+      }
+
+      if (fileRes.data.fileCreate.userErrors && fileRes.data.fileCreate.userErrors.length > 0) {
+        const userErrors = fileRes.data.fileCreate.userErrors.map(e => e.message || JSON.stringify(e)).join('; ');
+        console.error("File Create Errors:", userErrors);
+        // Continue anyway to at least save the data, but log the error
       }
 
       if (fileRes.data.fileCreate.files) {
@@ -234,8 +240,14 @@ async function handleSubmitConsign(request, env) {
 
     const moRes = await shopifyGraphql(metaobjectQuery, { metaobject: metaobjectInput }, env);
 
-    if (moRes.data.metaobjectCreate.userErrors.length > 0) {
-      return new Response(JSON.stringify({ error: moRes.data.metaobjectCreate.userErrors }), {
+    // Check if response has data
+    if (!moRes.data || !moRes.data.metaobjectCreate) {
+      throw new Error("Metaobject creation failed: Invalid response from Shopify");
+    }
+
+    if (moRes.data.metaobjectCreate.userErrors && moRes.data.metaobjectCreate.userErrors.length > 0) {
+      const userErrors = moRes.data.metaobjectCreate.userErrors.map(e => e.message || e.field ? `${e.field}: ${e.message}` : JSON.stringify(e)).join('; ');
+      return new Response(JSON.stringify({ error: `Metaobject creation errors: ${userErrors}` }), {
         status: 400,
         headers: corsHeaders()
       });
@@ -249,8 +261,10 @@ async function handleSubmitConsign(request, env) {
       headers: corsHeaders()
     });
   } catch (err) {
-    console.error(err);
-    return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500, headers: corsHeaders() });
+    console.error("Submit Consign Error:", err);
+    // Return the actual error message for better debugging
+    const errorMessage = err.message || "Internal Server Error";
+    return new Response(JSON.stringify({ error: errorMessage }), { status: 500, headers: corsHeaders() });
   }
 }
 
@@ -318,7 +332,13 @@ async function shopifyGraphql(query, variables, env) {
   const shop = env.SHOPIFY_SHOP_DOMAIN ? env.SHOPIFY_SHOP_DOMAIN.replace(/^https?:\/\//, '').replace(/\/$/, '').trim() : '';
   
   // Get access token using Client Credentials Grant (handles caching automatically)
-  const token = await getAccessToken(env);
+  let token;
+  try {
+    token = await getAccessToken(env);
+  } catch (error) {
+    // If token fetch fails, throw a clearer error
+    throw new Error(`Authentication failed: ${error.message}. Please check your CLIENT_ID, CLIENT_SECRET, and SHOP_DOMAIN secrets.`);
+  }
 
   const url = `https://${shop}/admin/api/2025-10/graphql.json`;
   const res = await fetch(url, {
@@ -333,14 +353,26 @@ async function shopifyGraphql(query, variables, env) {
   const text = await res.text();
   try {
     const json = JSON.parse(text);
-    if (json.errors) {
-      // Append token hint to the error message for debugging
-      const tokenHint = token.substring(0, 10) + '...';
-      json.errors = `[${json.errors}] (Token used: ${tokenHint})`;
+    
+    // Check for GraphQL errors
+    if (json.errors && json.errors.length > 0) {
+      const errorMessages = json.errors.map(e => e.message || JSON.stringify(e)).join('; ');
+      throw new Error(`Shopify API Error: ${errorMessages}`);
     }
+    
+    // Check for HTTP errors
+    if (!res.ok) {
+      throw new Error(`Shopify API returned ${res.status}: ${text.substring(0, 200)}`);
+    }
+    
     return json;
   } catch (e) {
-    throw new Error(`Connection Failed. URL: ${url}. Status: ${res.status}. Response: ${text.substring(0, 50)}...`);
+    // If it's already our custom error, rethrow it
+    if (e.message && (e.message.includes('Shopify API') || e.message.includes('Authentication failed'))) {
+      throw e;
+    }
+    // Otherwise, throw connection error
+    throw new Error(`Connection Failed. URL: ${url}. Status: ${res.status}. Response: ${text.substring(0, 100)}...`);
   }
 }
 

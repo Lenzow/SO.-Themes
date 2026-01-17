@@ -1029,7 +1029,28 @@
             headers: { 'Content-Type': 'application/json' },
           });
 
-          if (!finalRes.ok) throw new Error('Submission failed');
+          if (!finalRes.ok) {
+            let errMsg = 'Submission failed';
+            try {
+              const errData = await finalRes.json();
+              if (errData.error) {
+                // Handle different error formats
+                if (typeof errData.error === 'string') {
+                  errMsg = errData.error;
+                } else if (Array.isArray(errData.error)) {
+                  errMsg = errData.error.map(e => e.message || JSON.stringify(e)).join(', ');
+                } else {
+                  errMsg = JSON.stringify(errData.error);
+                }
+              } else if (errData.message) {
+                errMsg = errData.message;
+              }
+            } catch (e) {
+              const text = await finalRes.text();
+              if (text) errMsg = `Server error (${finalRes.status}): ${text.substring(0, 100)}`;
+            }
+            throw new Error(errMsg);
+          }
 
           // Success
           const dateCodes = new Date().toISOString().slice(0, 10).replace(/-/g, '');
