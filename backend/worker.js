@@ -229,8 +229,10 @@ async function handleSubmitConsign(request, env) {
       { key: "submission_type", value: "Quick Quote" }
     ];
 
+    // Images field: Store file IDs as JSON string
+    // Field name: submission_images (type: JSON or Single line text in Metaobject)
     if (fileIds.length > 0) {
-      fields.push({ key: "images", value: JSON.stringify(fileIds) });
+      fields.push({ key: "submission_images", value: JSON.stringify(fileIds) });
     }
 
     const metaobjectInput = {
