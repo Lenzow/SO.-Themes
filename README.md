@@ -1,1 +1,0 @@
-SO. by Sora Theme

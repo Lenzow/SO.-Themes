@@ -14,7 +14,10 @@
       style="background-image: url('{{ section.settings.banner_bg | image_url: width: 2000 }}'); background-color: #999;"
     >
       <div class="consign-banner-text">
-        <h1 class="h2 text-uppercase ls-1 mb-2">Sell with SO. by Sora</h1>
+        <h1 class="h2 ls-1 mb-2">
+          Sell with <br>
+          SO. by Sora
+        </h1>
         <p class="body-font ls-05 opacity-80">From submission to sale, handled for you.</p>
       </div>
     </div>
@@ -157,7 +160,7 @@
 
           <div class="upload-grid">
             <!-- Front (Required) -->
-            <div class="upload-box" onclick="triggerFile('file-front')">
+            <div id="upload-box-front" class="upload-box" onclick="triggerFile('file-front')">
               <input
                 type="file"
                 id="file-front"
@@ -177,7 +180,7 @@
             </div>
 
             <!-- Back (Required) -->
-            <div class="upload-box" onclick="triggerFile('file-back')">
+            <div id="upload-box-back" class="upload-box" onclick="triggerFile('file-back')">
               <input
                 type="file"
                 id="file-back"
@@ -197,7 +200,7 @@
             </div>
 
             <!-- Side -->
-            <div class="upload-box" onclick="triggerFile('file-side')">
+            <div id="upload-box-side" class="upload-box" onclick="triggerFile('file-side')">
               <input
                 type="file"
                 id="file-side"
@@ -217,7 +220,7 @@
             </div>
 
             <!-- Inside -->
-            <div class="upload-box" onclick="triggerFile('file-inside')">
+            <div id="upload-box-inside" class="upload-box" onclick="triggerFile('file-inside')">
               <input
                 type="file"
                 id="file-inside"
@@ -237,7 +240,7 @@
             </div>
 
             <!-- Details -->
-            <div class="upload-box" onclick="triggerFile('file-details')">
+            <div id="upload-box-details" class="upload-box" onclick="triggerFile('file-details')">
               <input
                 type="file"
                 id="file-details"
@@ -304,7 +307,15 @@
             class="btn btn-black btn-block text-uppercase ls-1"
             style="height:56px; background-color: #000 !important; color: #fff !important; border-radius: 4px;"
           >
-            Submit Item
+            <span>Submit Item</span>
+            <svg
+              style="width:20px; height:20px; margin-left:10px;"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
           </button>
         </div>
       </form>
