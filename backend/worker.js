@@ -245,8 +245,8 @@ async function handleSubmitConsign(request, env) {
 
 // Helper: Run GraphQL Query against Shopify
 async function shopifyGraphql(query, variables, env) {
-  const shop = env.SHOPIFY_SHOP_DOMAIN;
-  const token = env.SHOPIFY_ACCESS_TOKEN;
+  const shop = env.SHOPIFY_SHOP_DOMAIN ? env.SHOPIFY_SHOP_DOMAIN.replace(/^https?:\/\//, '').replace(/\/$/, '').trim() : '';
+  const token = env.SHOPIFY_ACCESS_TOKEN ? env.SHOPIFY_ACCESS_TOKEN.trim() : '';
 
   const res = await fetch(`https://${shop}/admin/api/2024-01/graphql.json`, {
     method: "POST",
