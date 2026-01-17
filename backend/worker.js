@@ -265,7 +265,8 @@ async function getAccessToken(env, shop) {
 
   const data = await res.json();
   if (!data.access_token) {
-    throw new Error(`Failed to get access token: ${JSON.stringify(data)}`);
+    // Return the specific error from Shopify (e.g. invalid_client)
+    throw new Error(`Shopify Handshake Failed: ${data.error || JSON.stringify(data)}`);
   }
   return data.access_token;
 }
