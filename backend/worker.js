@@ -190,8 +190,7 @@ async function handleSubmitConsign(request, env) {
 
     // Map Condition Descriptions
     const conditionMap = {
-      "New with tag": "New with tag: Brand new, never used, tag included.",
-      "New without tag": "New without tag: Brand new, never used, no tag.",
+      "New / Never Used": "New / Never Used: Never been worn, with or without tags.",
       "Excellent": "Excellent: Worn a few times, minimal signs of use.",
       "Good": "Good: Light signs of use, overall good condition.",
       "Acceptable": "Acceptable: Visible signs of use, still wearable and presentable."

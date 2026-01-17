@@ -11,16 +11,24 @@
   {% if section.settings.show_hero %}
     <div
       class="consign-banner"
-      style="background-image: url('{{ section.settings.banner_bg | image_url: width: 2000 }}'); background-color: #999;"
+      style="
+        background-image: url('{{ section.settings.banner_bg | image_url: width: 2000 }}');
+        background-color: #999;
+        height: {{ section.settings.banner_height }}px;
+      "
     >
       <div class="consign-banner-text">
-        <h1 class="h2 ls-1 mb-2">
-          Sell with <br>
-          SO. by Sora
+        <h1
+          class="h2 ls-1 mb-2"
+          style="text-transform: none !important; color: {{ section.settings.color_title }};"
+        >
+          {{ section.settings.hero_title }}
         </h1>
-        <p class="body-font ls-05 opacity-80">
-          Sell Your Luxury Items the Easy Way.<br>
-          We handle the selling so your pieces can find their next home and you get paid.
+        <p
+          class="body-font ls-05 opacity-80"
+          style="color: {{ section.settings.color_text }};"
+        >
+          {{ section.settings.hero_text | newline_to_br }}
         </p>
       </div>
     </div>
@@ -30,7 +38,7 @@
     <div class="form-container">
       <form id="ConsignForm" enctype="multipart/form-data">
         <div class="form-section fade-in">
-          <h3 class="h6 mb-3 text-uppercase font-weight-bold">Select Collection</h3>
+          <h3 class="step-header">1. Select Collection</h3>
           <div class="chip-group mb-4">
             <label class="chip">
               <input type="radio" name="contact[Collection]" value="Bags" checked onchange="updateBrandList('Bags')">
@@ -83,7 +91,7 @@
 
           <div class="grid-2">
             <div class="form-group" style="grid-column: span 2;">
-              <label class="form-label">Brand *</label>
+              <label class="form-label step-header">2. Brand *</label>
               <select
                 id="brand-select"
                 name="contact[Brand]"
@@ -106,20 +114,13 @@
           </div>
 
           <div class="form-group mt-3">
-            <label class="form-label">Condition *</label>
+            <label class="form-label step-header">3. Condition *</label>
             <div class="condition-grid">
               <label class="condition-card">
-                <input type="radio" name="contact[Condition]" value="New with tag" checked>
+                <input type="radio" name="contact[Condition]" value="New / Never Used" checked>
                 <div class="condition-content">
-                  <span class="condition-title">New with tag</span>
-                  <span class="condition-desc">Brand new, never used, tag included.</span>
-                </div>
-              </label>
-              <label class="condition-card">
-                <input type="radio" name="contact[Condition]" value="New without tag">
-                <div class="condition-content">
-                  <span class="condition-title">New without tag</span>
-                  <span class="condition-desc">Brand new, never used, no tag.</span>
+                  <span class="condition-title">New / Never Used</span>
+                  <span class="condition-desc">Never been worn, with or without tags.</span>
                 </div>
               </label>
               <label class="condition-card">
@@ -147,7 +148,7 @@
           </div>
 
           <div class="form-group mt-4">
-            <label class="form-label">Description (Optional)</label>
+            <label class="form-label step-header">4. Description (Optional)</label>
             <textarea
               name="contact[Description]"
               class="form-input"
@@ -158,8 +159,8 @@
         </div>
 
         <div class="form-section mt-5 fade-in" style="animation-delay: 0.1s;">
-          <h3 class="h6 mb-3 text-uppercase font-weight-bold">Photos</h3>
-          <p class="body-font small-text mb-3 opacity-60">Upload clear photos (Front & Back required).</p>
+          <h3 class="step-header mb-1">5. Photos</h3>
+          <p class="body-font small-text mb-2 opacity-60">Upload clear photos (Front & Back required).</p>
 
           <div class="upload-grid">
             <!-- Front (Required) -->
@@ -265,7 +266,7 @@
         </div>
 
         <div class="form-section mt-5 fade-in" style="animation-delay: 0.2s;">
-          <h3 class="h6 mb-3 text-uppercase font-weight-bold">Contact</h3>
+          <h3 class="step-header mb-3">6. Contact Info</h3>
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label">Phone *</label>
@@ -1208,6 +1209,44 @@
       "type": "image_picker",
       "id": "banner_bg",
       "label": "Banner Background"
+    },
+    {
+      "type": "range",
+      "id": "banner_height",
+      "min": 150,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "label": "Banner Height",
+      "default": 220
+    },
+    {
+      "type": "header",
+      "content": "Banner Text"
+    },
+    {
+      "type": "liquid",
+      "id": "hero_title",
+      "label": "Headline",
+      "default": "Sell with <br> SO. by Sora"
+    },
+    {
+      "type": "color",
+      "id": "color_title",
+      "label": "Headline Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_text",
+      "label": "Description",
+      "default": "Sell Your Luxury Items the Easy Way.\nWe handle the selling so your pieces can find their next home and you get paid."
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "Description Color",
+      "default": "#ffffff"
     },
     {
       "type": "header",
