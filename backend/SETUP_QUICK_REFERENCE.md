@@ -2,10 +2,10 @@
 
 ## 📋 App Credentials
 
-**App Name**: Consign Backend  
+**App Name**: Consignment backend V2  
 **Shop Domain**: so-bysora-devstore.myshopify.com  
-**Client ID**: `8a0723c5e50f444bdd84394836934b6b`  
-**Client Secret**: ``
+**Client ID**: `94c4f649efa55b1780649f85a48bff50`  
+**Client Secret**: `[Get from Shopify Dev Dashboard]`
 
 ---
 
@@ -18,7 +18,7 @@ cd backend
 
 # Set Client ID
 npx wrangler secret put SHOPIFY_CLIENT_ID
-# When prompted, paste: 8a0723c5e50f444bdd84394836934b6b
+# When prompted, paste: 94c4f649efa55b1780649f85a48bff50
 
 # Set Client Secret
 npx wrangler secret put SHOPIFY_CLIENT_SECRET
@@ -38,7 +38,7 @@ npx wrangler deploy
 ### 3. Test Token Fetch (Optional)
 
 ```bash
-node get_token.js so-bysora-devstore.myshopify.com 8a0723c5e50f444bdd84394836934b6b 
+node get_token.js so-bysora-devstore.myshopify.com 94c4f649efa55b1780649f85a48bff50 YOUR_CLIENT_SECRET 
 ```
 
 ---

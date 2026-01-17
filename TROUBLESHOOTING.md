@@ -80,23 +80,30 @@ npx wrangler deploy
 
 ---
 
-## ❌ Issue 3: "Shopify API Error" or "Invalid response from Shopify"
+## ❌ Issue 3: "Access denied for metaobject field" or "Shopify API Error"
 
-**Error Message**: `Shopify API Error: ...` or `Invalid response from Shopify`
+**Error Message**: `Access denied for metaobject field. Required access: 'read_metaobjects' access scope` or `Shopify API Error: ...`
 
 **Causes**:
-- App doesn't have required permissions/scopes
+- App doesn't have required permissions/scopes ⚠️ **MOST COMMON**
 - Metaobject definition doesn't exist
 - API version mismatch
 
 **Solution**:
-1. **Check App Permissions**:
-   - Go to: Shopify Dev Dashboard > Your App > Configuration
-   - Ensure these scopes are enabled:
-     - `read_files`
-     - `write_files`
-     - `read_metaobjects`
-     - `write_metaobjects`
+1. **Check App Permissions** (CRITICAL):
+   - Go to: Shopify Partners Dashboard → Your Store → Apps → Consign Backend → Configuration
+   - Click "Configure" next to "Admin API integration scopes"
+   - **Enable these required scopes**:
+     - ✅ `read_files`
+     - ✅ `write_files`
+     - ✅ `read_metaobjects` ⚠️ **REQUIRED**
+     - ✅ `write_metaobjects` ⚠️ **REQUIRED**
+   - Click **Save**
+   - **Redeploy worker** to get fresh token:
+     ```bash
+     cd backend
+     npx wrangler deploy
+     ```
 
 2. **Verify Metaobject Definition**:
    - Go to: Shopify Admin > Settings > Custom Data > Metaobjects
