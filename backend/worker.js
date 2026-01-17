@@ -260,9 +260,14 @@ async function shopifyGraphql(query, variables, env) {
 
   const text = await res.text();
   try {
-    return JSON.parse(text);
+    const json = JSON.parse(text);
+    if (json.errors) {
+      // Append token hint to the error message for debugging
+      const tokenHint = token.substring(0, 10) + '...';
+      json.errors = `[${json.errors}] (Token used: ${tokenHint})`;
+    }
+    return json;
   } catch (e) {
-    // Return detailed debug info
     throw new Error(`Connection Failed. URL: ${url}. Status: ${res.status}. Response: ${text.substring(0, 50)}...`);
   }
 }
