@@ -182,10 +182,16 @@
 }
 
 /* Upload Grid */
-.upload-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
+.form-section h3.step-header {
+  margin-bottom: 8px;
+  /* Tighter header */
+}
+
+/* Specific spacing for Photos section */
+.form-section p.body-font.small-text {
+  margin-bottom: 12px;
+  /* Close to upload grid */
+  margin-top: 0;
 }
 
 .upload-box {
@@ -420,6 +426,17 @@ body #ConsignForm #submitBtn:hover,
   background-color: #000 !important;
   border-color: #000 !important;
   transform: translateY(-1px);
+}
+
+/* Nuke theme button styles (pseudo-elements often hold the gradient/color) */
+body #ConsignForm #submitBtn::before,
+body #ConsignForm #submitBtn::after,
+.consign-dashboard-wrapper #submitBtn::before,
+.consign-dashboard-wrapper #submitBtn::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  opacity: 0 !important;
 }
 
 #submitBtn:active {
