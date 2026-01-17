@@ -243,10 +243,43 @@ async function handleSubmitConsign(request, env) {
   }
 }
 
+// Helper to get ephemeral access token using Client Credentials Grant
+async function getAccessToken(env, shop) {
+  const clientId = env.SHOPIFY_CLIENT_ID;
+  const clientSecret = env.SHOPIFY_CLIENT_SECRET;
+
+  if (!clientId || !clientSecret) {
+    throw new Error("Missing SHOPIFY_CLIENT_ID or SHOPIFY_CLIENT_SECRET env vars");
+  }
+
+  const url = `https://${shop}/admin/oauth/access_token`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: 'client_credentials'
+    })
+  });
+
+  const data = await res.json();
+  if (!data.access_token) {
+    throw new Error(`Failed to get access token: ${JSON.stringify(data)}`);
+  }
+  return data.access_token;
+}
+
 // Helper: Run GraphQL Query against Shopify
 async function shopifyGraphql(query, variables, env) {
   const shop = env.SHOPIFY_SHOP_DOMAIN ? env.SHOPIFY_SHOP_DOMAIN.replace(/^https?:\/\//, '').replace(/\/$/, '').trim() : '';
-  const token = env.SHOPIFY_ACCESS_TOKEN ? env.SHOPIFY_ACCESS_TOKEN.trim() : '';
+  // Get fresh token dynamically
+  let token;
+  try {
+    token = await getAccessToken(env, shop);
+  } catch (e) {
+    throw new Error(`Token Generation Failed: ${e.message}`);
+  }
 
   const url = `https://${shop}/admin/api/2025-10/graphql.json`;
   const res = await fetch(url, {
