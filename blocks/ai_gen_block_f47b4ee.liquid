@@ -1,0 +1,879 @@
+{% doc %}
+  @prompt
+    Create a refined, luxury-brand section titled “What We Stand For.”
+    The design should express timeless elegance and quiet confidence.
+    Display four core values — Authenticity, Curation, Hospitality, and Sustainability — each represented with a minimalist gold-line icon and short description in elegant typography.
+    
+    The layout must feel balanced and airy, with soft cream or ivory background and generous spacing.
+    On desktop, arrange the four pillars horizontally in equal columns beneath the title and a delicate italic tagline:
+    “Our idea is to let you feel the joy of wearing clothes & passing them on.”
+    On mobile, stack them vertically with smooth breathing space between icons and text for an editorial flow.
+    
+    The aesthetic should evoke high-end fashion branding — think quiet luxury, subtle gold tones, refined serif headings, and modern sans-serif body text.
+    No harsh shadows or strong borders — only softness, precision, and grace., section should have the ability to add image for every Value inn Icon place to replace icon with image we made
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-values-section-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding_horizontal }}px {{ block.settings.section_padding_bottom }}px;
+    position: relative;
+  }
+
+  .ai-values-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .ai-values-header-{{ ai_gen_id }} {
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-values-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.title_font.family }}, {{ block.settings.title_font.fallback_families }};
+    font-weight: {{ block.settings.title_font.weight }};
+    font-size: {{ block.settings.title_size }}px;
+    line-height: {{ block.settings.title_line_height }};
+    color: {{ block.settings.title_color }};
+    margin: 0 0 {{ block.settings.title_spacing }}px;
+    letter-spacing: {{ block.settings.title_letter_spacing }}px;
+  }
+
+  .ai-values-tagline-{{ ai_gen_id }} {
+    font-family: {{ block.settings.tagline_font.family }}, {{ block.settings.tagline_font.fallback_families }};
+    font-weight: {{ block.settings.tagline_font.weight }};
+    font-style: italic;
+    font-size: {{ block.settings.tagline_size }}px;
+    line-height: {{ block.settings.tagline_line_height }};
+    color: {{ block.settings.tagline_color }};
+    margin: 0;
+    opacity: {{ block.settings.tagline_opacity | divided_by: 100.0 }};
+  }
+
+  .ai-values-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+    margin-top: {{ block.settings.grid_spacing }}px;
+  }
+
+  .ai-values-item-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: {{ block.settings.item_padding }}px;
+  }
+
+  .ai-values-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    margin-bottom: {{ block.settings.icon_spacing }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-values-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    stroke: {{ block.settings.icon_color }};
+    fill: none;
+    stroke-width: {{ block.settings.icon_stroke_width }};
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .ai-values-icon-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-values-item-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.item_title_font.family }}, {{ block.settings.item_title_font.fallback_families }};
+    font-weight: {{ block.settings.item_title_font.weight }};
+    font-size: {{ block.settings.item_title_size }}px;
+    line-height: {{ block.settings.item_title_line_height }};
+    color: {{ block.settings.item_title_color }};
+    margin: 0 0 {{ block.settings.item_title_spacing }}px;
+    letter-spacing: {{ block.settings.item_title_letter_spacing }}px;
+  }
+
+  .ai-values-item-description-{{ ai_gen_id }} {
+    font-family: {{ block.settings.item_description_font.family }}, {{ block.settings.item_description_font.fallback_families }};
+    font-weight: {{ block.settings.item_description_font.weight }};
+    font-size: {{ block.settings.item_description_size }}px;
+    line-height: {{ block.settings.item_description_line_height }};
+    color: {{ block.settings.item_description_color }};
+    margin: 0;
+    opacity: {{ block.settings.item_description_opacity | divided_by: 100.0 }};
+  }
+
+  @media screen and (max-width: 1024px) {
+    .ai-values-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: {{ block.settings.grid_gap_tablet }}px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-values-section-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top_mobile }}px {{ block.settings.section_padding_horizontal_mobile }}px {{ block.settings.section_padding_bottom_mobile }}px;
+    }
+
+    .ai-values-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.grid_gap_mobile }}px;
+      margin-top: {{ block.settings.grid_spacing_mobile }}px;
+    }
+
+    .ai-values-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size_mobile }}px;
+      margin-bottom: {{ block.settings.title_spacing_mobile }}px;
+    }
+
+    .ai-values-tagline-{{ ai_gen_id }} {
+      font-size: {{ block.settings.tagline_size_mobile }}px;
+    }
+
+    .ai-values-header-{{ ai_gen_id }} {
+      margin-bottom: {{ block.settings.header_spacing_mobile }}px;
+    }
+
+    .ai-values-item-{{ ai_gen_id }} {
+      padding: {{ block.settings.item_padding_mobile }}px;
+    }
+
+    .ai-values-icon-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size_mobile }}px;
+      height: {{ block.settings.icon_size_mobile }}px;
+      margin-bottom: {{ block.settings.icon_spacing_mobile }}px;
+    }
+
+    .ai-values-item-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.item_title_size_mobile }}px;
+      margin-bottom: {{ block.settings.item_title_spacing_mobile }}px;
+    }
+
+    .ai-values-item-description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.item_description_size_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<section class="ai-values-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-values-container-{{ ai_gen_id }}">
+    <header class="ai-values-header-{{ ai_gen_id }}">
+      {% if block.settings.title != blank %}
+        <h2 class="ai-values-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+      {% endif %}
+      {% if block.settings.tagline != blank %}
+        <p class="ai-values-tagline-{{ ai_gen_id }}">{{ block.settings.tagline }}</p>
+      {% endif %}
+    </header>
+
+    <div class="ai-values-grid-{{ ai_gen_id }}">
+      <div class="ai-values-item-{{ ai_gen_id }}">
+        <div class="ai-values-icon-{{ ai_gen_id }}">
+          {% if block.settings.value_1_image %}
+            <img
+              src="{{ block.settings.value_1_image | image_url: width: 200 }}"
+              alt="{{ block.settings.value_1_image.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.value_1_image.width }}"
+              height="{{ block.settings.value_1_image.height }}"
+            >
+          {% else %}
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          {% endif %}
+        </div>
+        <h3 class="ai-values-item-title-{{ ai_gen_id }}">{{ block.settings.value_1_title }}</h3>
+        <p class="ai-values-item-description-{{ ai_gen_id }}">{{ block.settings.value_1_description }}</p>
+      </div>
+
+      <div class="ai-values-item-{{ ai_gen_id }}">
+        <div class="ai-values-icon-{{ ai_gen_id }}">
+          {% if block.settings.value_2_image %}
+            <img
+              src="{{ block.settings.value_2_image | image_url: width: 200 }}"
+              alt="{{ block.settings.value_2_image.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.value_2_image.width }}"
+              height="{{ block.settings.value_2_image.height }}"
+            >
+          {% else %}
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+            </svg>
+          {% endif %}
+        </div>
+        <h3 class="ai-values-item-title-{{ ai_gen_id }}">{{ block.settings.value_2_title }}</h3>
+        <p class="ai-values-item-description-{{ ai_gen_id }}">{{ block.settings.value_2_description }}</p>
+      </div>
+
+      <div class="ai-values-item-{{ ai_gen_id }}">
+        <div class="ai-values-icon-{{ ai_gen_id }}">
+          {% if block.settings.value_3_image %}
+            <img
+              src="{{ block.settings.value_3_image | image_url: width: 200 }}"
+              alt="{{ block.settings.value_3_image.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.value_3_image.width }}"
+              height="{{ block.settings.value_3_image.height }}"
+            >
+          {% else %}
+            <svg viewBox="0 0 24 24">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          {% endif %}
+        </div>
+        <h3 class="ai-values-item-title-{{ ai_gen_id }}">{{ block.settings.value_3_title }}</h3>
+        <p class="ai-values-item-description-{{ ai_gen_id }}">{{ block.settings.value_3_description }}</p>
+      </div>
+
+      <div class="ai-values-item-{{ ai_gen_id }}">
+        <div class="ai-values-icon-{{ ai_gen_id }}">
+          {% if block.settings.value_4_image %}
+            <img
+              src="{{ block.settings.value_4_image | image_url: width: 200 }}"
+              alt="{{ block.settings.value_4_image.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.value_4_image.width }}"
+              height="{{ block.settings.value_4_image.height }}"
+            >
+          {% else %}
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
+              <path d="M8 12h8"/>
+              <path d="M12 8v8"/>
+            </svg>
+          {% endif %}
+        </div>
+        <h3 class="ai-values-item-title-{{ ai_gen_id }}">{{ block.settings.value_4_title }}</h3>
+        <p class="ai-values-item-description-{{ ai_gen_id }}">{{ block.settings.value_4_description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "What We Stand For",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "What We Stand For"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Our idea is to let you feel the joy of wearing clothes & passing them on."
+    },
+    {
+      "type": "header",
+      "content": "First value"
+    },
+    {
+      "type": "image_picker",
+      "id": "value_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "value_1_title",
+      "label": "Title",
+      "default": "Authenticity"
+    },
+    {
+      "type": "textarea",
+      "id": "value_1_description",
+      "label": "Description",
+      "default": "Every piece tells a story of genuine craftsmanship and timeless design."
+    },
+    {
+      "type": "header",
+      "content": "Second value"
+    },
+    {
+      "type": "image_picker",
+      "id": "value_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "value_2_title",
+      "label": "Title",
+      "default": "Curation"
+    },
+    {
+      "type": "textarea",
+      "id": "value_2_description",
+      "label": "Description",
+      "default": "Carefully selected pieces that embody elegance and enduring style."
+    },
+    {
+      "type": "header",
+      "content": "Third value"
+    },
+    {
+      "type": "image_picker",
+      "id": "value_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "value_3_title",
+      "label": "Title",
+      "default": "Hospitality"
+    },
+    {
+      "type": "textarea",
+      "id": "value_3_description",
+      "label": "Description",
+      "default": "Creating meaningful connections through exceptional service and care."
+    },
+    {
+      "type": "header",
+      "content": "Fourth value"
+    },
+    {
+      "type": "image_picker",
+      "id": "value_4_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "value_4_title",
+      "label": "Title",
+      "default": "Sustainability"
+    },
+    {
+      "type": "textarea",
+      "id": "value_4_description",
+      "label": "Description",
+      "default": "Mindful choices that honor both beauty and responsibility."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 40,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Header bottom spacing",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "grid_spacing",
+      "min": 40,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Grid top spacing",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_tablet",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Grid gap tablet",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_mobile",
+      "min": 30,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Grid gap mobile",
+      "default": 45
+    },
+    {
+      "type": "header",
+      "content": "Mobile layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_mobile",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Top padding mobile",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_mobile",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom padding mobile",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal_mobile",
+      "min": 15,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal padding mobile",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "header_spacing_mobile",
+      "min": 30,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Header bottom spacing mobile",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "grid_spacing_mobile",
+      "min": 30,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Grid top spacing mobile",
+      "default": 45
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FAF9F6"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#2C2C2C"
+    },
+    {
+      "type": "color",
+      "id": "tagline_color",
+      "label": "Tagline color",
+      "default": "#6B6B6B"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#D4AF37"
+    },
+    {
+      "type": "color",
+      "id": "item_title_color",
+      "label": "Value title color",
+      "default": "#2C2C2C"
+    },
+    {
+      "type": "color",
+      "id": "item_description_color",
+      "label": "Value description color",
+      "default": "#6B6B6B"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Title font",
+      "default": "playfair_display_n4"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "min": 20,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size mobile",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "title_line_height",
+      "min": 1,
+      "max": 1.5,
+      "step": 0.1,
+      "label": "Title line height",
+      "default": 1.2
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "min": -1,
+      "max": 2,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Title letter spacing",
+      "default": 0.5
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Title bottom spacing",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "title_spacing_mobile",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Title bottom spacing mobile",
+      "default": 16
+    },
+    {
+      "type": "font_picker",
+      "id": "tagline_font",
+      "label": "Tagline font",
+      "default": "playfair_display_n4"
+    },
+    {
+      "type": "range",
+      "id": "tagline_size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Tagline size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "tagline_size_mobile",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Tagline size mobile",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "tagline_line_height",
+      "min": 1.2,
+      "max": 1.8,
+      "step": 0.1,
+      "label": "Tagline line height",
+      "default": 1.5
+    },
+    {
+      "type": "range",
+      "id": "tagline_opacity",
+      "min": 60,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Tagline opacity",
+      "default": 85
+    },
+    {
+      "type": "font_picker",
+      "id": "item_title_font",
+      "label": "Value title font",
+      "default": "playfair_display_n4"
+    },
+    {
+      "type": "range",
+      "id": "item_title_size",
+      "min": 16,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Value title size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "item_title_size_mobile",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Value title size mobile",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "item_title_line_height",
+      "min": 1.1,
+      "max": 1.5,
+      "step": 0.1,
+      "label": "Value title line height",
+      "default": 1.3
+    },
+    {
+      "type": "range",
+      "id": "item_title_letter_spacing",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Value title letter spacing",
+      "default": 0.3
+    },
+    {
+      "type": "range",
+      "id": "item_title_spacing",
+      "min": 8,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Value title bottom spacing",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "item_title_spacing_mobile",
+      "min": 6,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "label": "Value title bottom spacing mobile",
+      "default": 10
+    },
+    {
+      "type": "font_picker",
+      "id": "item_description_font",
+      "label": "Value description font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "item_description_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Value description size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "item_description_size_mobile",
+      "min": 12,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Value description size mobile",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "item_description_line_height",
+      "min": 1.3,
+      "max": 1.8,
+      "step": 0.1,
+      "label": "Value description line height",
+      "default": 1.6
+    },
+    {
+      "type": "range",
+      "id": "item_description_opacity",
+      "min": 70,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Value description opacity",
+      "default": 90
+    },
+    {
+      "type": "header",
+      "content": "Icons and images"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 32,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "min": 28,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Icon size mobile",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "icon_stroke_width",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "label": "Icon stroke width",
+      "default": 1.5
+    },
+    {
+      "type": "range",
+      "id": "icon_spacing",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon bottom spacing",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "icon_spacing_mobile",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon bottom spacing mobile",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Item spacing"
+    },
+    {
+      "type": "range",
+      "id": "item_padding",
+      "min": 15,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Item padding",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "item_padding_mobile",
+      "min": 15,
+      "max": 35,
+      "step": 5,
+      "unit": "px",
+      "label": "Item padding mobile",
+      "default": 25
+    }
+  ],
+  "presets": [
+    {
+      "name": "What We Stand For"
+    }
+  ]
+}
+{% endschema %}
