@@ -162,8 +162,9 @@
 .grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 25px;
-  /* Wider gap */
+  gap: 20px;
+  /* Reduced gap for consistency */
+  align-items: start;
 }
 
 /* Upload Grid */
@@ -364,15 +365,14 @@
   padding-top: 40px;
 }
 
-#submitBtn {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-  border: none !important;
+.consign-dashboard-wrapper #submitBtn {
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 1px solid #000 !important;
   font-weight: 700 !important;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   height: 56px !important;
-  /* Taller button */
   font-size: 15px;
   width: 100%;
   border-radius: 4px;
@@ -381,11 +381,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
 }
 
-#submitBtn:hover {
+.consign-dashboard-wrapper #submitBtn:hover {
   opacity: 0.9;
-  background-color: #333 !important;
+  background-color: #000 !important;
+  border-color: #000 !important;
   transform: translateY(-1px);
 }
 
