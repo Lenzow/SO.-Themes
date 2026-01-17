@@ -131,14 +131,16 @@
 /* Form Elements */
 .form-input {
   width: 100%;
-  padding: 16px 18px;
+  padding: 0 18px;
+  height: 50px;
+  /* Taller inputs for desktop */
+  line-height: 50px;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   background: #fff;
   font-size: 15px;
   color: #333;
   margin-top: 10px;
-  /* More space between label and input */
   transition: all 0.2s;
   appearance: none;
 }
@@ -365,10 +367,14 @@
   padding-top: 40px;
 }
 
+/* Higher specificity to override theme */
+body #ConsignForm #submitBtn,
 .consign-dashboard-wrapper #submitBtn {
-  background-color: #000 !important;
-  color: #fff !important;
-  border: 1px solid #000 !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 1px solid #000000 !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
   font-weight: 700 !important;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -384,8 +390,17 @@
   box-shadow: none !important;
   appearance: none !important;
   -webkit-appearance: none !important;
+  margin: 0;
 }
 
+body #ConsignForm #submitBtn svg,
+.consign-dashboard-wrapper #submitBtn svg {
+  color: #fff !important;
+  fill: none !important;
+  stroke: currentColor !important;
+}
+
+body #ConsignForm #submitBtn:hover,
 .consign-dashboard-wrapper #submitBtn:hover {
   opacity: 0.9;
   background-color: #000 !important;
@@ -526,21 +541,52 @@
 
   .consign-banner {
     height: 180px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
   }
 
   .form-section {
-    margin-bottom: 50px;
+    margin-bottom: 30px;
+    /* Reduced spacing on mobile */
+  }
+
+  /* Sticky Footer for Mobile */
+  .form-actions {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    margin-left: -20px;
+    /* Counteract container padding */
+    margin-right: -20px;
+    padding: 15px 20px 20px;
+    /* Extra bottom padding for safe area */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    z-index: 999;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+    margin-top: 0 !important;
+    /* Remove top margin to clamp */
+  }
+
+  /* Ensure content doesn't get hidden behind sticky footer */
+  #ConsignForm {
+    padding-bottom: 20px;
   }
 
   .grid-2 {
     grid-template-columns: 1fr;
-    gap: 25px;
+    gap: 15px;
   }
 
   .upload-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    gap: 10px;
+  }
+
+  /* Upload box aspect ratio fix */
+  .upload-box {
+    aspect-ratio: 1 / 1;
   }
 
   .upload-grid>div:last-child {
@@ -548,31 +594,17 @@
     aspect-ratio: 2.5;
   }
 
-  .form-actions {
-    position: sticky;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.98);
-    padding: 20px 20px;
-    border-top: 1px solid #f0f0f0;
-    z-index: 100;
-    margin-left: -20px;
-    margin-right: -20px;
-    margin-top: 40px;
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
-  }
-
-  .chip {
-    flex: 1 1 45%;
-  }
-
-  .chip span {
-    padding: 12px;
-    font-size: 13px;
-  }
-
   .form-input {
     font-size: 16px;
-    padding: 14px 16px;
+    height: 55px;
+    /* Taller tap target */
+    line-height: normal;
+    padding: 0 16px;
+  }
+
+  /* Remove excessive gap after Contact section */
+  .form-section:last-of-type {
+    margin-bottom: 10px;
   }
 }
 
