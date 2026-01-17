@@ -3,8 +3,29 @@ main = "worker.js"
 compatibility_date = "2023-10-25"
 
 # Set these secrets via `wrangler secret put <NAME>` or in Cloudflare Dashboard
-# SHOPIFY_ACCESS_TOKEN
-# SHOPIFY_SHOP_DOMAIN (e.g., sobysora.myshopify.com)
+# 
+# Required Secrets (Client Credentials Grant - 2024/2025 Update):
+# - SHOPIFY_CLIENT_ID: From Shopify Dev Dashboard > Your Custom App > Settings
+# - SHOPIFY_CLIENT_SECRET: From Shopify Dev Dashboard > Your Custom App > Settings  
+# - SHOPIFY_SHOP_DOMAIN: Your shop domain (e.g., so-bysora-devstore.myshopify.com)
+#
+# Current App: "Consign Backend"
+# Shop Domain: so-bysora-devstore.myshopify.com
+#
+# Setup Instructions:
+# 1. Log into Shopify Dev Dashboard: https://partners.shopify.com/
+# 2. Navigate to your Custom App "Consign Backend"
+# 3. Go to your app > Settings
+# 4. Copy the Client ID and Client Secret
+# 5. Set secrets:
+#    npx wrangler secret put SHOPIFY_CLIENT_ID
+#    npx wrangler secret put SHOPIFY_CLIENT_SECRET
+#    npx wrangler secret put SHOPIFY_SHOP_DOMAIN
+#    (Enter: so-bysora-devstore.myshopify.com)
+#
+# Documentation:
+# - Client Credentials Grant: https://shopify.dev/docs/apps/build/authentication-authorization/access-tokens/client-credentials-grant
+# - Dev Dashboard: https://shopify.dev/docs/apps/build/dev-dashboard
 
 [vars]
 # Public variables if needed

@@ -1,3 +1,10 @@
+// In-memory token cache (for single-instance deployments)
+// For production with multiple worker instances, use Cloudflare KV instead
+let tokenCache = {
+  token: null,
+  expiresAt: 0
+};
+
 export default {
   async fetch(request, env) {
     if (request.method === "OPTIONS") {
@@ -15,10 +22,14 @@ export default {
     }
 
 
-    // 0. Configuration Check
-    if (!env.SHOPIFY_ACCESS_TOKEN || !env.SHOPIFY_SHOP_DOMAIN) {
+    // 0. Configuration Check (Client Credentials Grant - 2024/2025 Update)
+    if (!env.SHOPIFY_CLIENT_ID || !env.SHOPIFY_CLIENT_SECRET || !env.SHOPIFY_SHOP_DOMAIN) {
       return new Response(JSON.stringify({
-        error: "Configuration Error: Secrets not set. Please run 'wrangler secret put SHOPIFY_ACCESS_TOKEN' and 'wrangler secret put SHOPIFY_SHOP_DOMAIN'."
+        error: "Configuration Error: Secrets not set. Please run:\n" +
+               "  'wrangler secret put SHOPIFY_CLIENT_ID'\n" +
+               "  'wrangler secret put SHOPIFY_CLIENT_SECRET'\n" +
+               "  'wrangler secret put SHOPIFY_SHOP_DOMAIN'\n\n" +
+               "Get these from: Shopify Dev Dashboard > Your Custom App > Settings"
       }), {
         status: 500,
         headers: {
@@ -243,44 +254,71 @@ async function handleSubmitConsign(request, env) {
   }
 }
 
-// Helper to get ephemeral access token using Client Credentials Grant
-async function getAccessToken(env, shop) {
-  const clientId = env.SHOPIFY_CLIENT_ID;
-  const clientSecret = env.SHOPIFY_CLIENT_SECRET;
+/**
+ * Get Access Token using Client Credentials Grant (2024/2025 Shopify Update)
+ * Tokens expire after ~24 hours, so we cache and refresh as needed
+ * 
+ * Reference: https://shopify.dev/docs/apps/build/authentication-authorization/access-tokens/client-credentials-grant
+ */
+async function getAccessToken(env) {
+  const now = Date.now();
+  
+  // Check if we have a valid cached token (refresh 1 hour before expiry)
+  if (tokenCache.token && tokenCache.expiresAt > (now + 3600000)) {
+    return tokenCache.token;
+  }
 
-  if (!clientId || !clientSecret) {
-    throw new Error("Missing SHOPIFY_CLIENT_ID or SHOPIFY_CLIENT_SECRET env vars");
+  const shop = env.SHOPIFY_SHOP_DOMAIN ? env.SHOPIFY_SHOP_DOMAIN.replace(/^https?:\/\//, '').replace(/\/$/, '').trim() : '';
+  const clientId = env.SHOPIFY_CLIENT_ID ? env.SHOPIFY_CLIENT_ID.trim() : '';
+  const clientSecret = env.SHOPIFY_CLIENT_SECRET ? env.SHOPIFY_CLIENT_SECRET.trim() : '';
+
+  if (!shop || !clientId || !clientSecret) {
+    throw new Error("Missing required credentials for Client Credentials Grant");
   }
 
   const url = `https://${shop}/admin/oauth/access_token`;
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      client_id: clientId,
-      client_secret: clientSecret,
-      grant_type: 'client_credentials'
-    })
-  });
+  
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        client_id: clientId,
+        client_secret: clientSecret,
+        grant_type: "client_credentials"
+      })
+    });
 
-  const data = await res.json();
-  if (!data.access_token) {
-    // Return the specific error from Shopify (e.g. invalid_client)
-    throw new Error(`Shopify Handshake Failed: ${data.error || JSON.stringify(data)}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Token request failed (${response.status}): ${errorText}`);
+    }
+
+    const data = await response.json();
+    
+    if (!data.access_token) {
+      throw new Error("No access_token in response: " + JSON.stringify(data));
+    }
+
+    // Cache the token (Shopify tokens last ~24 hours, we'll cache for 23 hours)
+    tokenCache.token = data.access_token;
+    tokenCache.expiresAt = now + (23 * 60 * 60 * 1000); // 23 hours in milliseconds
+
+    return data.access_token;
+  } catch (error) {
+    console.error("Failed to get access token:", error);
+    throw new Error(`Token fetch failed: ${error.message}`);
   }
-  return data.access_token;
 }
 
 // Helper: Run GraphQL Query against Shopify
 async function shopifyGraphql(query, variables, env) {
   const shop = env.SHOPIFY_SHOP_DOMAIN ? env.SHOPIFY_SHOP_DOMAIN.replace(/^https?:\/\//, '').replace(/\/$/, '').trim() : '';
-  // Get fresh token dynamically
-  let token;
-  try {
-    token = await getAccessToken(env, shop);
-  } catch (e) {
-    throw new Error(`Token Generation Failed: ${e.message}`);
-  }
+  
+  // Get access token using Client Credentials Grant (handles caching automatically)
+  const token = await getAccessToken(env);
 
   const url = `https://${shop}/admin/api/2025-10/graphql.json`;
   const res = await fetch(url, {
