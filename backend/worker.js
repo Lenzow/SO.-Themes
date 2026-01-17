@@ -248,7 +248,8 @@ async function shopifyGraphql(query, variables, env) {
   const shop = env.SHOPIFY_SHOP_DOMAIN ? env.SHOPIFY_SHOP_DOMAIN.replace(/^https?:\/\//, '').replace(/\/$/, '').trim() : '';
   const token = env.SHOPIFY_ACCESS_TOKEN ? env.SHOPIFY_ACCESS_TOKEN.trim() : '';
 
-  const res = await fetch(`https://${shop}/admin/api/2025-10/graphql.json`, {
+  const url = `https://${shop}/admin/api/2025-10/graphql.json`;
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -257,7 +258,13 @@ async function shopifyGraphql(query, variables, env) {
     body: JSON.stringify({ query, variables })
   });
 
-  return await res.json();
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    // Return detailed debug info
+    throw new Error(`Connection Failed. URL: ${url}. Status: ${res.status}. Response: ${text.substring(0, 50)}...`);
+  }
 }
 
 function corsHeaders() {
