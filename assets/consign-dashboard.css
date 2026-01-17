@@ -385,6 +385,8 @@ body #ConsignForm #submitBtn,
   background-color: #000000 !important;
   color: #ffffff !important;
   border: 1px solid #000000 !important;
+  background-image: none !important;
+  /* Fix for theme gradients */
   fill: #ffffff !important;
   stroke: #ffffff !important;
   font-weight: 700 !important;
@@ -561,29 +563,22 @@ body #ConsignForm #submitBtn:hover,
     /* Reduced spacing on mobile */
   }
 
-  /* Sticky Footer for Mobile */
+  /* Sticky Footer Removed by Request */
   .form-actions {
-    position: sticky;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    margin-left: -20px;
-    /* Counteract container padding */
-    margin-right: -20px;
-    padding: 15px 20px 20px;
-    /* Extra bottom padding for safe area */
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-    z-index: 999;
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
-    margin-top: 0 !important;
-    /* Remove top margin to clamp */
+    position: static;
+    margin-top: 20px;
+    padding-bottom: 20px;
+    width: auto;
+    margin-left: 0;
+    margin-right: 0;
+    box-shadow: none;
+    border-top: 1px solid #eee;
+    background: none;
+    backdrop-filter: none;
   }
 
-  /* Ensure content doesn't get hidden behind sticky footer */
   #ConsignForm {
-    padding-bottom: 20px;
+    padding-bottom: 0;
   }
 
   .grid-2 {
