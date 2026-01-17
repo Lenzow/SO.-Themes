@@ -1,0 +1,103 @@
+{% comment %}
+  Section: faq-nav.liquid
+  Purpose: Minimal, configurable link bar to switch between General / Buyer / Consignor FAQs
+  How to use: Add to sections/ as faq-nav.liquid, then add the section to your FAQ templates in the Theme Editor.
+{% endcomment %}
+
+<section class="faq-nav-wrapper" style="--fn-text-color: {{ section.settings.text_color }}; --fn-hover-color: {{ section.settings.hover_color }}; --fn-divider-color: {{ section.settings.divider_color }}; --fn-divider-thickness: {{ section.settings.divider_thickness }}px; --fn-gap-desktop: {{ section.settings.gap_desktop }}px; --fn-gap-mobile: {{ section.settings.gap_mobile }}px; --fn-font-desktop: {{ section.settings.font_size_desktop }}px; --fn-font-mobile: {{ section.settings.font_size_mobile }}px; --fn-under-gap: {{ section.settings.space_to_underline }}px; --fn-align: {{ section.settings.alignment }};">
+  <div class="faq-nav-inner page-width">
+    {% if section.settings.show_top_border %}
+      <div class="faq-top-border" aria-hidden="true"></div>
+    {% endif %}
+
+    <nav class="faq-nav" role="navigation" aria-label="FAQ navigation">
+      <ul class="faq-nav-list">
+        {% if section.settings.link_1_url != blank %}
+          <li class="faq-nav-item"><a class="faq-link" href="{{ section.settings.link_1_url }}">{{ section.settings.link_1_text }}</a></li>
+        {% endif %}
+        {% if section.settings.link_2_url != blank %}
+          <li class="faq-nav-item"><a class="faq-link" href="{{ section.settings.link_2_url }}">{{ section.settings.link_2_text }}</a></li>
+        {% endif %}
+        {% if section.settings.link_3_url != blank %}
+          <li class="faq-nav-item"><a class="faq-link" href="{{ section.settings.link_3_url }}">{{ section.settings.link_3_text }}</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+
+    <div class="faq-bottom-rule" aria-hidden="true"></div>
+  </div>
+</section>
+
+<style>
+  .faq-nav-wrapper { color: var(--fn-text-color); }
+  .faq-nav-inner { width: 100%; margin: 0 auto; }
+
+  /* Optional top hairline to match reference */
+  .faq-top-border { border-top: var(--fn-divider-thickness) solid var(--fn-divider-color); opacity: .2; margin-bottom: 12px; }
+
+  .faq-nav { text-align: var(--fn-align); }
+  .faq-nav-list { display: inline-flex; align-items: center; gap: var(--fn-gap-desktop); padding: 0; margin: 0; list-style: none; font-size: var(--fn-font-desktop); }
+  .faq-nav-item { position: relative; }
+
+  /* Vertical separators between items */
+  .faq-nav-item + .faq-nav-item { padding-left: calc(var(--fn-gap-desktop)); }
+  .faq-nav-item + .faq-nav-item::before {
+    content: ""; position: absolute; left: calc(0.5 * (var(--fn-gap-desktop) * -1 + 2px)); top: 50%; transform: translateY(-50%);
+    width: 1px; height: 1.25em; background: var(--fn-divider-color); opacity: .6;
+  }
+
+  .faq-link { color: var(--fn-text-color); text-decoration: none; letter-spacing: 0.18em; font-weight: 600; }
+  .faq-link:focus, .faq-link:hover { color: var(--fn-hover-color); text-decoration: none; }
+
+  /* Bottom rule and spacing below text */
+  .faq-bottom-rule { border-bottom: var(--fn-divider-thickness) solid var(--fn-divider-color); margin-top: var(--fn-under-gap); }
+
+  /* Mobile */
+  @media (max-width: 749px) {
+    .faq-nav-list { gap: var(--fn-gap-mobile); font-size: var(--fn-font-mobile); flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .faq-nav-item + .faq-nav-item { padding-left: var(--fn-gap-mobile); }
+    .faq-nav-item + .faq-nav-item::before { left: calc(0.5 * (var(--fn-gap-mobile) * -1 + 2px)); height: 1em; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "FAQ Navigation",
+  "tag": "section",
+  "class": "section faq-nav",
+  "settings": [
+    {"type": "text", "id": "link_1_text", "label": "Link 1 text", "default": "GENERAL FAQS"},
+    {"type": "url",  "id": "link_1_url",  "label": "Link 1 URL"},
+
+    {"type": "text", "id": "link_2_text", "label": "Link 2 text", "default": "BUYER FAQS"},
+    {"type": "url",  "id": "link_2_url",  "label": "Link 2 URL"},
+
+    {"type": "text", "id": "link_3_text", "label": "Link 3 text", "default": "CONSIGNOR FAQS"},
+    {"type": "url",  "id": "link_3_url",  "label": "Link 3 URL"},
+
+    {"type": "header", "content": "Typography & Colors"},
+    {"type": "color", "id": "text_color", "label": "Text color", "default": "#000000"},
+    {"type": "color", "id": "hover_color", "label": "Hover/focus color", "default": "#000000"},
+    {"type": "range", "id": "font_size_desktop", "label": "Text size (desktop, px)", "min": 12, "max": 32, "step": 1, "default": 16},
+    {"type": "range", "id": "font_size_mobile",  "label": "Text size (mobile, px)",  "min": 12, "max": 28, "step": 1, "default": 14},
+
+    {"type": "header", "content": "Dividers & Spacing"},
+    {"type": "color", "id": "divider_color", "label": "Divider color", "default": "#E5E5E5"},
+    {"type": "range", "id": "divider_thickness", "label": "Divider thickness (px)", "min": 1, "max": 4, "step": 1, "default": 1},
+    {"type": "range", "id": "gap_desktop", "label": "Space between links (desktop, px)", "min": 8, "max": 80, "step": 2, "default": 56},
+    {"type": "range", "id": "gap_mobile",  "label": "Space between links (mobile, px)",  "min": 6, "max": 48, "step": 2, "default": 28},
+    {"type": "range", "id": "space_to_underline", "label": "Space between text and underline (px)", "min": 0, "max": 40, "step": 1, "default": 12},
+
+    {"type": "header", "content": "Layout"},
+    {"type": "select", "id": "alignment", "label": "Alignment", "default": "center", "options": [
+      {"value": "left", "label": "Left"},
+      {"value": "center", "label": "Center"},
+      {"value": "right", "label": "Right"}
+    ]},
+    {"type": "checkbox", "id": "show_top_border", "label": "Show thin top border", "default": false}
+  ],
+  "presets": [
+    {"name": "FAQ Navigation", "category": "Text"}
+  ]
+}
+{% endschema %}

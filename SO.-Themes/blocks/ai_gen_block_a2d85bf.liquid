@@ -1,0 +1,482 @@
+{% doc %}
+  @prompt
+    Lets add a location section
+    that have two Image one for mobile and one for desktop
+    with link 
+    and title 
+    description
+    and space between them
+    tha goal is make the image clickable so in mobile we will use mobile Image of our location that will lead them to googl map link and same for desktop, It should have an opttion to make title and description size and font same like Theme default, lovely but the text is not inheret like same text abve section i should be same, same in mobile and same in desktop , if you cant make i give option for color, size, and font
+    for each text in mobile and desktop and an option for font to be defalt theme font
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-location-section-{{ ai_gen_id }} {
+    padding: {{ block.settings.section_padding_top }}px 0 {{ block.settings.section_padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-location-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-location-content-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.content_spacing }}px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .ai-location-text-content-{{ ai_gen_id }} {
+    max-width: 600px;
+  }
+
+  .ai-location-title-{{ ai_gen_id }} {
+    {% if block.settings.title_use_theme_font %}
+      font-family: inherit;
+    {% endif %}
+    font-size: {{ block.settings.title_size_desktop }}px;
+    color: {{ block.settings.title_color_desktop }};
+    margin: 0 0 {{ block.settings.title_margin_bottom }}px;
+    font-weight: 600;
+  }
+
+  .ai-location-description-{{ ai_gen_id }} {
+    {% if block.settings.description_use_theme_font %}
+      font-family: inherit;
+    {% endif %}
+    font-size: {{ block.settings.description_size_desktop }}px;
+    color: {{ block.settings.description_color_desktop }};
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .ai-location-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    max-width: {{ block.settings.image_max_width }}px;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-location-image-wrapper-{{ ai_gen_id }}:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-location-image-link-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-location-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-location-image-desktop-{{ ai_gen_id }} {
+    display: block;
+  }
+
+  .ai-location-image-mobile-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-location-placeholder-{{ ai_gen_id }} {
+    background-color: #f4f4f4;
+    width: 100%;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-location-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-location-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 200px;
+    max-height: 200px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-location-section-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top_mobile }}px 0 {{ block.settings.section_padding_bottom_mobile }}px;
+    }
+
+    .ai-location-container-{{ ai_gen_id }} {
+      padding: 0 15px;
+    }
+
+    .ai-location-content-{{ ai_gen_id }} {
+      gap: {{ block.settings.content_spacing_mobile }}px;
+    }
+
+    .ai-location-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size_mobile }}px;
+      color: {{ block.settings.title_color_mobile }};
+    }
+
+    .ai-location-description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.description_size_mobile }}px;
+      color: {{ block.settings.description_color_mobile }};
+    }
+
+    .ai-location-image-desktop-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-location-image-mobile-{{ ai_gen_id }} {
+      display: block;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-location-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-location-container-{{ ai_gen_id }}">
+    <div class="ai-location-content-{{ ai_gen_id }}">
+      {% if block.settings.title != blank or block.settings.description != blank %}
+        <div class="ai-location-text-content-{{ ai_gen_id }}">
+          {% if block.settings.title != blank %}
+            <h2 class="ai-location-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+          {% endif %}
+          
+          {% if block.settings.description != blank %}
+            <div class="ai-location-description-{{ ai_gen_id }}">{{ block.settings.description }}</div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <div class="ai-location-image-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.google_maps_link != blank %}
+          <a href="{{ block.settings.google_maps_link }}" class="ai-location-image-link-{{ ai_gen_id }}" target="_blank" rel="noopener">
+        {% endif %}
+
+        {% if block.settings.desktop_image or block.settings.mobile_image %}
+          {% if block.settings.desktop_image %}
+            <img
+              src="{{ block.settings.desktop_image | image_url: width: 1200 }}"
+              alt="{{ block.settings.desktop_image.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.desktop_image.width }}"
+              height="{{ block.settings.desktop_image.height }}"
+              class="ai-location-image-{{ ai_gen_id }} ai-location-image-desktop-{{ ai_gen_id }}"
+            >
+          {% endif %}
+
+          {% if block.settings.mobile_image %}
+            <img
+              src="{{ block.settings.mobile_image | image_url: width: 800 }}"
+              alt="{{ block.settings.mobile_image.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.mobile_image.width }}"
+              height="{{ block.settings.mobile_image.height }}"
+              class="ai-location-image-{{ ai_gen_id }} ai-location-image-mobile-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <img
+              src="{{ block.settings.desktop_image | image_url: width: 800 }}"
+              alt="{{ block.settings.desktop_image.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.desktop_image.width }}"
+              height="{{ block.settings.desktop_image.height }}"
+              class="ai-location-image-{{ ai_gen_id }} ai-location-image-mobile-{{ ai_gen_id }}"
+            >
+          {% endif %}
+        {% else %}
+          <div class="ai-location-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+            <div class="ai-location-empty-state-{{ ai_gen_id }}">
+              Add your location images
+            </div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.google_maps_link != blank %}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Location section",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Visit Our Location"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Find us at our convenient location. Click the image to get directions via Google Maps.</p>"
+    },
+    {
+      "type": "url",
+      "id": "google_maps_link",
+      "label": "Google Maps link"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "range",
+      "id": "image_max_width",
+      "min": 300,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "Image max width",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Title typography"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_use_theme_font",
+      "label": "Use theme default font",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Size",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "title_color_desktop",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "min": 18,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Size",
+      "default": 28
+    },
+    {
+      "type": "color",
+      "id": "title_color_mobile",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Description typography"
+    },
+    {
+      "type": "checkbox",
+      "id": "description_use_theme_font",
+      "label": "Use theme default font",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "description_size_desktop",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "description_color_desktop",
+      "label": "Color",
+      "default": "#666666"
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "description_size_mobile",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Size",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "description_color_mobile",
+      "label": "Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Section top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Section bottom padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "content_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Space between content",
+      "default": 40
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Section top padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Section bottom padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "content_spacing_mobile",
+      "min": 16,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Space between content",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Title bottom margin",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Location section"
+    }
+  ]
+}
+{% endschema %}

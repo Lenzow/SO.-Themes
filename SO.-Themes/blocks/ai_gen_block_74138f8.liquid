@@ -1,0 +1,645 @@
+{% doc %}
+  @prompt
+    Layout instructions for dev
+    
+    Desktop layout
+    
+    Full width section near the end of the FAQ page.
+    
+    Background: light neutral (for example, very soft beige or off white).
+    
+    Two columns:
+    
+    Left column: text block + contact button.
+    
+    Right column: optional image block.
+    
+    Vertical alignment: center content in both columns.
+    
+    Padding: generous padding on all sides so it feels calm and spacious.
+    
+    Mobile layout
+    
+    Stack content in one column.
+    
+    Order:
+    
+    Optional image (full width, rounded corners).
+    
+    Heading and paragraph.
+    
+    Contact info list.
+    
+    Contact button (full width).
+    
+    Maintain comfortable spacing between each element.
+    
+    Image slot
+    
+    Optional.
+    
+    Accepts one image.
+    
+    On desktop: right column, fixed max width, auto height, rounded corners.
+    
+    On mobile: full width, aspect ratio around 4:3 or 3:2.
+    
+    Button behaviour
+    
+    Primary button under the text and contact info.
+    
+    On click:
+    
+    Open WhatsApp chat if on mobile.
+    
+    Or go to a dedicated Contact page / open mail link, depending on your setup.
+    
+    Button label: “Contact SO. by Sora”., amazing lets add Adderss in contact information
+    ---
+    on contacy us button put a linnk amnd i will decide what i will do in link if its page or link to whatsapp
+    --
+    page should have a button to be hdidden or used 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-contact-section-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.padding_desktop }}px {{ block.settings.padding_horizontal_desktop }}px;
+  }
+
+  .ai-contact-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ block.settings.column_gap }}px;
+    align-items: center;
+  }
+
+  .ai-contact-content-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.content_gap }}px;
+  }
+
+  .ai-contact-heading-{{ ai_gen_id }} {
+    margin: 0;
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    line-height: 1.2;
+  }
+
+  .ai-contact-text-{{ ai_gen_id }} {
+    margin: 0;
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.6;
+  }
+
+  .ai-contact-info-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.info_gap }}px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ai-contact-info-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.text_size }}px;
+  }
+
+  .ai-contact-info-icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: {{ block.settings.icon_color }};
+    margin-top: 2px;
+  }
+
+  .ai-contact-button-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_font_size }}px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: fit-content;
+  }
+
+  .ai-contact-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_bg_hover_color }};
+    color: {{ block.settings.button_text_color }};
+  }
+
+  .ai-contact-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: {{ block.settings.image_max_width }}px;
+    margin-left: auto;
+  }
+
+  .ai-contact-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-contact-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: #f4f4f4;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-contact-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-contact-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-contact-section-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding_mobile }}px {{ block.settings.padding_horizontal_mobile }}px;
+    }
+
+    .ai-contact-container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.mobile_gap }}px;
+    }
+
+    .ai-contact-image-wrapper-{{ ai_gen_id }} {
+      order: -1;
+      max-width: 100%;
+    }
+
+    .ai-contact-image-placeholder-{{ ai_gen_id }} {
+      aspect-ratio: 3 / 2;
+    }
+
+    .ai-contact-button-{{ ai_gen_id }} {
+      width: 100%;
+    }
+
+    .ai-contact-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size_mobile }}px;
+    }
+
+    .ai-contact-text-{{ ai_gen_id }},
+    .ai-contact-info-item-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-contact-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-contact-container-{{ ai_gen_id }}">
+    <div class="ai-contact-content-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-contact-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+      {% endif %}
+
+      {% if block.settings.text != blank %}
+        <div class="ai-contact-text-{{ ai_gen_id }}">{{ block.settings.text }}</div>
+      {% endif %}
+
+      {% if block.settings.show_contact_info %}
+        <ul class="ai-contact-info-{{ ai_gen_id }}">
+          {% if block.settings.address != blank %}
+            <li class="ai-contact-info-item-{{ ai_gen_id }}">
+              <svg class="ai-contact-info-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>{{ block.settings.address }}</span>
+            </li>
+          {% endif %}
+
+          {% if block.settings.phone != blank %}
+            <li class="ai-contact-info-item-{{ ai_gen_id }}">
+              <svg class="ai-contact-info-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <span>{{ block.settings.phone }}</span>
+            </li>
+          {% endif %}
+
+          {% if block.settings.email != blank %}
+            <li class="ai-contact-info-item-{{ ai_gen_id }}">
+              <svg class="ai-contact-info-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span>{{ block.settings.email }}</span>
+            </li>
+          {% endif %}
+
+          {% if block.settings.whatsapp != blank %}
+            <li class="ai-contact-info-item-{{ ai_gen_id }}">
+              <svg class="ai-contact-info-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+              </svg>
+              <span>{{ block.settings.whatsapp }}</span>
+            </li>
+          {% endif %}
+        </ul>
+      {% endif %}
+
+      {% if block.settings.show_button and block.settings.button_text != blank %}
+        {% if block.settings.button_link != blank %}
+          <a 
+            href="{{ block.settings.button_link }}" 
+            class="ai-contact-button-{{ ai_gen_id }}"
+          >
+            {{ block.settings.button_text }}
+          </a>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="ai-contact-image-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.image %}
+        <img
+          src="{{ block.settings.image | image_url: width: 1000 }}"
+          alt="{{ block.settings.image.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.image.width }}"
+          height="{{ block.settings.image.height }}"
+          class="ai-contact-image-{{ ai_gen_id }}"
+        >
+      {% else %}
+        <div class="ai-contact-image-placeholder-{{ ai_gen_id }}">
+          {{ 'image' | placeholder_svg_tag }}
+          <div class="ai-contact-empty-state-{{ ai_gen_id }}">
+            Add an image (optional)
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contact section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Get in touch</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Have questions? We're here to help. Reach out to our team and we'll get back to you as soon as possible.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contact_info",
+      "label": "Show contact information",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "Address"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone number"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email address"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp",
+      "label": "WhatsApp display text"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Contact SO. by Sora"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Link to a page, WhatsApp, or any URL"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_max_width",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Column gap",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Content gap",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "info_gap",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Contact info gap",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "mobile_gap",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile gap",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_desktop",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_desktop",
+      "min": 20,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile padding",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_mobile",
+      "min": 15,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile horizontal padding",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#F9F8F6"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 20,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size mobile",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 14,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size mobile",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_hover_color",
+      "label": "Background hover",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact section"
+    }
+  ]
+}
+{% endschema %}
