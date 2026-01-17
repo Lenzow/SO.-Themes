@@ -267,6 +267,11 @@
 
         <div class="form-section mt-5 fade-in" style="animation-delay: 0.2s;">
           <h3 class="step-header mb-3">6. Contact Info</h3>
+          <div class="form-group mb-3">
+            <label class="form-label">Name *</label>
+            <input type="text" name="contact[name]" class="form-input" placeholder="Your Name" required>
+          </div>
+
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label">Phone *</label>
@@ -282,13 +287,9 @@
               <input type="hidden" name="contact[phone]" id="real-phone-input">
             </div>
             <div class="form-group">
-              <label class="form-label">Email (Optional)</label>
+              <label class="form-label">Email</label>
               <input type="email" name="contact[email]" class="form-input" placeholder="Your Email">
             </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Name (Optional)</label>
-            <input type="text" name="contact[name]" class="form-input" placeholder="Your Name">
           </div>
 
           <div class="sidebar-inline mt-4 p-3 bg-light" style="border-radius:2px;">
@@ -1132,10 +1133,10 @@
         img.style.display = 'block';
 
         const box = img.closest('.upload-box');
-        box.querySelector('.remove-btn').style.display = 'flex';
+        box.classList.add('has-file');
 
-        const placeholder = document.getElementById(imgId + '-placeholder');
-        if (placeholder) placeholder.style.display = 'none';
+        // Styles handled by CSS class now
+        // box.querySelector('.remove-btn').style.display = 'flex';
       };
       reader.readAsDataURL(input.files[0]);
     }
@@ -1153,7 +1154,8 @@
 
     document.getElementById(imgId + '-placeholder').style.display = 'block';
 
-    e.target.style.display = 'none';
+    const box = e.target.closest('.upload-box');
+    box.classList.remove('has-file');
   }
 
   function showLoading(show) {
